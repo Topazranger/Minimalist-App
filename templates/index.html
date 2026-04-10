@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>SimpleDone — Minimal To-Do</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', Roboto, Helvetica, sans-serif;
+            background: #ffffff;
+            color: #1d1d1f;
+            line-height: 1.5;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 80px 24px 120px;
+        }
+
+        /* Greeting Section */
+        .greeting-section {
+            margin-bottom: 48px;
+        }
+
+        .greeting-line {
+            opacity: 0;
+            transform: translateY(30px);
+            animation-duration: 1.2s;
+            animation-fill-mode: forwards;
+            animation-timing-function: cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .greeting-hi {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #1d1d1f;
+            line-height: 1.2;
+            animation-name: fadeInUpSlow;
+            animation-delay: 0s;
+        }
+
+        .greeting-message {
+            font-size: 48px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #1d1d1f;
+            line-height: 1.2;
+            animation-name: fadeInUpSlow;
+            animation-delay: 0.5s;
+        }
+
+        @keyframes fadeInUpSlow {
+            0% {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .task-list {
+            list-style: none;
+            margin-bottom: 24px;
+        }
+
+        .task-item {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9e9ef;
+            animation: fadeInTask 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes fadeInTask {
+            from {
+                opacity: 0;
+                transform: translateY(5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Task main row */
+        .task-main {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 1.5px solid #c6c6c8;
+            background: white;
+            margin-right: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .checkbox:hover {
+            border-color: #8e8e93;
+        }
+
+        .checkbox.checked {
+            background: #1d1d1f;
+            border-color: #1d1d1f;
+        }
+
+        .checkbox.checked::after {
+            content: "✓";
+            color: white;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .task-text {
+            flex: 1;
+            font-size: 18px;
+            font-weight: 400;
+            color: #1d1d1f;
+            background: transparent;
+            border: none;
+            padding: 4px 0;
+            font-family: inherit;
+            transition: color 0.2s ease;
+            word-break: break-word;
+        }
+
+        .task-text.completed {
+            color: #8e8e93;
+            text-decoration: line-through;
+        }
+
+        .task-text:focus {
+            outline: none;
+        }
+
+        /* Due date display */
+        .task-due-date {
+            font-size: 13px;
+            color: #8e8e93;
+            background: #f5f5f5;
+            padding: 4px 10px;
+            border-radius: 20px;
+            margin-left: 12px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .task-due-date.overdue {
+            color: #ff3b30;
+            background: #ffe6e5;
+        }
+
+        /* Action buttons (appear on hover) */
+        .task-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-left: 12px;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .task-item:hover .task-actions {
+            opacity: 1;
+        }
+
+        .due-date-btn, .delete-task {
+            background: none;
+            border: none;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 6px 10px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .due-date-btn {
+            color: #4CAF50;
+            background: #e8f5e9;
+        }
+
+        .due-date-btn:hover {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .delete-task {
+            color: #8e8e93;
+        }
+
+        .delete-task:hover {
+            color: #ff3b30;
+            background: #ffe6e5;
+        }
+
+        /* Date picker modal (hidden by default) */
+        .date-picker-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .date-picker-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .date-picker-card {
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            width: 320px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+        }
+
+        .date-picker-modal.active .date-picker-card {
+            transform: scale(1);
+        }
+
+        .date-picker-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #1d1d1f;
+        }
+
+        .date-picker-card input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #e9e9ef;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            margin-bottom: 12px;
+        }
+
+        .date-picker-card input:focus {
+            outline: none;
+            border-color: #1d1d1f;
+        }
+
+        .date-picker-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .date-picker-buttons button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .save-date-btn {
+            background: #1d1d1f;
+            color: white;
+        }
+
+        .save-date-btn:hover {
+            background: #333;
+        }
+
+        .cancel-date-btn {
+            background: #f5f5f5;
+            color: #1d1d1f;
+        }
+
+        .cancel-date-btn:hover {
+            background: #e9e9ef;
+        }
+
+        .remove-date-btn {
+            background: #ffe6e5;
+            color: #ff3b30;
+        }
+
+        .remove-date-btn:hover {
+            background: #ff3b30;
+            color: white;
+        }
+
+        .new-task {
+            margin-top: 32px;
+        }
+
+        .new-task-input {
+            width: 100%;
+            font-size: 18px;
+            padding: 12px 0;
+            border: none;
+            border-bottom: 1px solid #e9e9ef;
+            font-family: inherit;
+            background: transparent;
+            color: #1d1d1f;
+            transition: border-color 0.2s ease;
+            opacity: 0;
+            animation: fadeInPlaceholder 0.8s ease forwards;
+            animation-delay: 1.4s;
+        }
+
+        @keyframes fadeInPlaceholder {
+            0% {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .new-task-input:focus {
+            outline: none;
+            border-bottom-color: #1d1d1f;
+        }
+
+        .new-task-input::placeholder {
+            color: #c6c6c8;
+            font-weight: 400;
+        }
+
+        .stats {
+            margin-top: 48px;
+            padding-top: 24px;
+            border-top: 1px solid #e9e9ef;
+            font-size: 14px;
+            color: #8e8e93;
+            text-align: center;
+            opacity: 0;
+            animation: fadeInStats 0.6s ease forwards;
+            animation-delay: 1.6s;
+        }
+
+        @keyframes fadeInStats {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 550px) {
+            .container {
+                padding: 48px 20px 100px;
+            }
+            
+            .greeting-hi,
+            .greeting-message {
+                font-size: 32px;
+            }
+            
+            .task-text {
+                font-size: 16px;
+            }
+            
+            .new-task-input {
+                font-size: 16px;
+            }
+            
+            .task-due-date {
+                font-size: 11px;
+                margin-left: 0;
+                margin-top: 8px;
+            }
+            
+            .task-item {
+                flex-wrap: wrap;
+            }
+            
+            .task-actions {
+                margin-left: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="greeting-section">
+            <div class="greeting-line greeting-hi">Hi!</div>
+            <div class="greeting-line greeting-message">Start your simple productivity journey today</div>
+        </div>
+
+        <ul class="task-list" id="taskList">
+            {% if tasks %}
+                {% for task in tasks %}
+                <li class="task-item" data-id="{{ task[0] }}" data-due-date="{{ task[3] if task|length > 3 else '' }}">
+                    <div class="task-main">
+                        <div class="checkbox {% if task[2] == 1 %}checked{% endif %}"></div>
+                        <span class="task-text {% if task[2] == 1 %}completed{% endif %}" contenteditable="true">
+                            {{ task[1] }}
+                        </span>
+                        {% if task|length > 3 and task[3] %}
+                        <span class="task-due-date" data-due="{{ task[3] }}">
+                            📅 {{ task[3] }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="task-actions">
+                        <button class="due-date-btn">📅 Due</button>
+                        <button class="delete-task">✕</button>
+                    </div>
+                </li>
+                {% endfor %}
+            {% endif %}
+        </ul>
+
+        <div class="new-task">
+            <input type="text" 
+                   class="new-task-input" 
+                   id="newTaskInput" 
+                   placeholder="add task"
+                   autofocus>
+        </div>
+
+        <div class="stats" id="stats"></div>
+    </div>
+
+    <!-- Date Picker Modal -->
+    <div id="datePickerModal" class="date-picker-modal">
+        <div class="date-picker-card">
+            <h3>Add due date</h3>
+            <input type="date" id="dueDateInput">
+            <input type="time" id="dueTimeInput">
+            <div class="date-picker-buttons">
+                <button class="save-date-btn">Save</button>
+                <button class="cancel-date-btn">Cancel</button>
+                <button class="remove-date-btn" id="removeDateBtn" style="display: none;">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
