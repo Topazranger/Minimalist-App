@@ -7,13 +7,14 @@ app = Flask(__name__)
 def init_db():
     conn = sqlite3.connect('tasks.db')
     c = conn.cursor()
-    # Add due_date column if it doesn't exist
+    # Create table with tags column
     c.execute('''
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             description TEXT NOT NULL,
             completed INTEGER DEFAULT 0,
             due_date TEXT,
+            tags TEXT,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )
     ''')
@@ -23,6 +24,8 @@ def init_db():
     columns = [col[1] for col in c.fetchall()]
     if 'due_date' not in columns:
         c.execute('ALTER TABLE tasks ADD COLUMN due_date TEXT')
+    if 'tags' not in columns:
+        c.execute('ALTER TABLE tasks ADD COLUMN tags TEXT')
     
     conn.commit()
     conn.close()
@@ -31,7 +34,7 @@ def init_db():
 def index():
     conn = sqlite3.connect('tasks.db')
     c = conn.cursor()
-    c.execute('SELECT id, description, completed, due_date FROM tasks ORDER BY completed ASC, created_at DESC')
+    c.execute('SELECT id, description, completed, due_date, tags FROM tasks ORDER BY completed ASC, created_at DESC')
     tasks = c.fetchall()
     conn.close()
     return render_template('index.html', tasks=tasks)
@@ -48,7 +51,7 @@ def add_task():
         conn.commit()
         
         task_id = c.lastrowid
-        c.execute('SELECT id, description, completed, due_date FROM tasks WHERE id = ?', (task_id,))
+        c.execute('SELECT id, description, completed, due_date, tags FROM tasks WHERE id = ?', (task_id,))
         new_task = c.fetchone()
         conn.close()
         
@@ -58,7 +61,8 @@ def add_task():
                 'id': new_task[0],
                 'description': new_task[1],
                 'completed': new_task[2],
-                'due_date': new_task[3]
+                'due_date': new_task[3],
+                'tags': new_task[4] if new_task[4] else None
             }
         })
     
@@ -76,7 +80,7 @@ def toggle_task(task_id):
         c.execute('UPDATE tasks SET completed = ? WHERE id = ?', (new_status, task_id))
         conn.commit()
         
-        c.execute('SELECT id, description, completed, due_date FROM tasks WHERE id = ?', (task_id,))
+        c.execute('SELECT id, description, completed, due_date, tags FROM tasks WHERE id = ?', (task_id,))
         updated = c.fetchone()
         conn.close()
         
@@ -86,7 +90,8 @@ def toggle_task(task_id):
                 'id': updated[0],
                 'description': updated[1],
                 'completed': updated[2],
-                'due_date': updated[3]
+                'due_date': updated[3],
+                'tags': updated[4]
             }
         })
     
@@ -110,6 +115,19 @@ def update_due_date(task_id):
     conn = sqlite3.connect('tasks.db')
     c = conn.cursor()
     c.execute('UPDATE tasks SET due_date = ? WHERE id = ?', (due_date, task_id))
+    conn.commit()
+    conn.close()
+    
+    return jsonify({'success': True})
+
+@app.route('/update-tags/<int:task_id>', methods=['POST'])
+def update_tags(task_id):
+    data = request.get_json()
+    tags = data.get('tags')
+    
+    conn = sqlite3.connect('tasks.db')
+    c = conn.cursor()
+    c.execute('UPDATE tasks SET tags = ? WHERE id = ?', (tags, task_id))
     conn.commit()
     conn.close()
     

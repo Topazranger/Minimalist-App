@@ -16,8 +16,94 @@
             background: #ffffff;
             color: #1d1d1f;
             line-height: 1.5;
-            padding: 0;
             min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Hover Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 280px;
+            height: 100vh;
+            background: #f8f8fa;
+            border-right: 1px solid #e9e9ef;
+            transform: translateX(-260px);
+            transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            z-index: 100;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.05);
+        }
+
+        .sidebar:hover {
+            transform: translateX(0);
+        }
+
+        .sidebar-trigger {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 100vh;
+            z-index: 99;
+        }
+
+        .sidebar-content {
+            padding: 40px 20px;
+        }
+
+        .sidebar-logo {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e9e9ef;
+            color: #1d1d1f;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+        }
+
+        .sidebar-nav li {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-nav button {
+            width: 100%;
+            text-align: left;
+            padding: 12px 16px;
+            background: none;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            cursor: pointer;
+            color: #1d1d1f;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sidebar-nav button:hover {
+            background: #e9e9ef;
+        }
+
+        .sidebar-nav button.active {
+            background: #1d1d1f;
+            color: white;
+        }
+
+        .main-content {
+            transition: margin-left 0.3s ease;
+            min-height: 100vh;
+        }
+
+        .sidebar-trigger:hover ~ .main-content,
+        .sidebar:hover ~ .main-content {
+            margin-left: 20px;
         }
 
         .container {
@@ -26,7 +112,273 @@
             padding: 80px 24px 120px;
         }
 
-        /* Greeting Section */
+        /* Calendar Page */
+        .calendar-page {
+            display: none;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 80px 24px 120px;
+        }
+
+        .calendar-page.active {
+            display: block;
+        }
+
+        .todo-page {
+            display: block;
+        }
+
+        .todo-page.hidden {
+            display: none;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .calendar-title {
+            font-size: 32px;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+        }
+
+        .calendar-nav {
+            display: flex;
+            gap: 12px;
+        }
+
+        .calendar-nav button {
+            background: #f5f5f5;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        .calendar-nav button:hover {
+            background: #e9e9ef;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .calendar-weekday {
+            text-align: center;
+            padding: 12px;
+            font-weight: 500;
+            color: #8e8e93;
+            font-size: 14px;
+        }
+
+        .calendar-day {
+            aspect-ratio: 1;
+            border: 1px solid #e9e9ef;
+            border-radius: 12px;
+            padding: 8px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: white;
+            overflow-y: auto;
+        }
+
+        .calendar-day:hover {
+            background: #f8f8fa;
+            border-color: #1d1d1f;
+        }
+
+        .calendar-day.other-month {
+            background: #fafafa;
+            color: #c6c6c8;
+        }
+
+        .calendar-day.today {
+            border-color: #1d1d1f;
+            background: #f8f8fa;
+        }
+
+        .day-number {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .calendar-task {
+            font-size: 10px;
+            padding: 2px 4px;
+            background: #e8f5e9;
+            border-radius: 4px;
+            margin-bottom: 2px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            cursor: pointer;
+        }
+
+        .calendar-task.completed {
+            background: #e9e9ef;
+            text-decoration: line-through;
+            color: #8e8e93;
+        }
+
+        .calendar-task.overdue {
+            background: #ffe6e5;
+            color: #ff3b30;
+        }
+
+        /* Day Detail View */
+        .day-detail-view {
+            margin-top: 40px;
+            padding: 24px;
+            background: #f8f8fa;
+            border-radius: 20px;
+            border: 1px solid #e9e9ef;
+            display: none;
+        }
+
+        .day-detail-view.active {
+            display: block;
+            animation: fadeInUp 0.3s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .day-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .day-detail-title {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.01em;
+        }
+
+        .close-detail-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #8e8e93;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .close-detail-btn:hover {
+            background: #e9e9ef;
+            color: #1d1d1f;
+        }
+
+        .day-task-list {
+            list-style: none;
+        }
+
+        .day-task-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            border: 1px solid #e9e9ef;
+        }
+
+        .day-task-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .day-task-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1.5px solid #c6c6c8;
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .day-task-checkbox.checked {
+            background: #1d1d1f;
+            border-color: #1d1d1f;
+        }
+
+        .day-task-checkbox.checked::after {
+            content: "✓";
+            color: white;
+            font-size: 11px;
+            font-weight: 500;
+        }
+
+        .day-task-text {
+            font-size: 15px;
+            color: #1d1d1f;
+        }
+
+        .day-task-text.completed {
+            color: #8e8e93;
+            text-decoration: line-through;
+        }
+
+        .day-task-tags {
+            display: flex;
+            gap: 6px;
+        }
+
+        .day-task-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            background: #f0f0f0;
+            color: #1d1d1f;
+        }
+
+        .day-task-tag.work { background: #e3f2fd; color: #1565c0; }
+        .day-task-tag.personal { background: #fce4ec; color: #c2185b; }
+        .day-task-tag.shopping { background: #fff3e0; color: #e65100; }
+        .day-task-tag.health { background: #e8f5e9; color: #2e7d32; }
+        .day-task-tag.study { background: #f3e5f5; color: #7b1fa2; }
+        .day-task-tag.urgent { background: #ffebee; color: #c62828; }
+
+        .no-tasks-message {
+            text-align: center;
+            padding: 40px;
+            color: #8e8e93;
+            font-style: italic;
+        }
+
         .greeting-section {
             margin-bottom: 48px;
         }
@@ -96,12 +448,13 @@
             }
         }
 
-        /* Task main row */
         .task-main {
             display: flex;
             align-items: center;
             flex: 1;
             min-width: 0;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .checkbox {
@@ -146,6 +499,7 @@
             font-family: inherit;
             transition: color 0.2s ease;
             word-break: break-word;
+            min-width: 150px;
         }
 
         .task-text.completed {
@@ -157,14 +511,34 @@
             outline: none;
         }
 
-        /* Due date display */
+        .task-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: #f0f0f0;
+            color: #1d1d1f;
+            white-space: nowrap;
+        }
+
+        .tag.work { background: #e3f2fd; color: #1565c0; }
+        .tag.personal { background: #fce4ec; color: #c2185b; }
+        .tag.shopping { background: #fff3e0; color: #e65100; }
+        .tag.health { background: #e8f5e9; color: #2e7d32; }
+        .tag.study { background: #f3e5f5; color: #7b1fa2; }
+        .tag.urgent { background: #ffebee; color: #c62828; }
+
         .task-due-date {
             font-size: 13px;
             color: #8e8e93;
             background: #f5f5f5;
             padding: 4px 10px;
             border-radius: 20px;
-            margin-left: 12px;
             white-space: nowrap;
             flex-shrink: 0;
         }
@@ -174,12 +548,11 @@
             background: #ffe6e5;
         }
 
-        /* Action buttons (appear on hover) */
         .task-actions {
             display: flex;
             gap: 8px;
             align-items: center;
-            margin-left: 12px;
+            margin-left: 40px;
             opacity: 0;
             transition: opacity 0.2s ease;
             flex-shrink: 0;
@@ -189,7 +562,7 @@
             opacity: 1;
         }
 
-        .due-date-btn, .delete-task {
+        .tag-btn, .due-date-btn, .delete-task {
             background: none;
             border: none;
             font-size: 14px;
@@ -198,6 +571,16 @@
             border-radius: 8px;
             transition: all 0.2s ease;
             font-family: inherit;
+        }
+
+        .tag-btn {
+            color: #7b1fa2;
+            background: #f3e5f5;
+        }
+
+        .tag-btn:hover {
+            background: #7b1fa2;
+            color: white;
         }
 
         .due-date-btn {
@@ -219,8 +602,7 @@
             background: #ffe6e5;
         }
 
-        /* Date picker modal (hidden by default) */
-        .date-picker-modal {
+        .date-picker-modal, .tag-modal {
             position: fixed;
             top: 0;
             left: 0;
@@ -236,12 +618,12 @@
             transition: all 0.3s ease;
         }
 
-        .date-picker-modal.active {
+        .date-picker-modal.active, .tag-modal.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .date-picker-card {
+        .date-picker-card, .tag-card {
             background: white;
             border-radius: 20px;
             padding: 24px;
@@ -251,18 +633,19 @@
             transition: transform 0.3s ease;
         }
 
-        .date-picker-modal.active .date-picker-card {
+        .date-picker-modal.active .date-picker-card,
+        .tag-modal.active .tag-card {
             transform: scale(1);
         }
 
-        .date-picker-card h3 {
+        .date-picker-card h3, .tag-card h3 {
             font-size: 20px;
             font-weight: 600;
             margin-bottom: 20px;
             color: #1d1d1f;
         }
 
-        .date-picker-card input {
+        .date-picker-card input, .tag-input {
             width: 100%;
             padding: 12px;
             border: 1px solid #e9e9ef;
@@ -272,18 +655,38 @@
             margin-bottom: 12px;
         }
 
-        .date-picker-card input:focus {
+        .date-picker-card input:focus, .tag-input:focus {
             outline: none;
             border-color: #1d1d1f;
         }
 
-        .date-picker-buttons {
+        .suggested-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .suggested-tag {
+            font-size: 13px;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background: #f5f5f5;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggested-tag:hover {
+            background: #e9e9ef;
+        }
+
+        .date-picker-buttons, .tag-buttons {
             display: flex;
             gap: 12px;
             margin-top: 20px;
         }
 
-        .date-picker-buttons button {
+        .date-picker-buttons button, .tag-buttons button {
             flex: 1;
             padding: 12px;
             border: none;
@@ -294,30 +697,30 @@
             transition: all 0.2s ease;
         }
 
-        .save-date-btn {
+        .save-date-btn, .save-tags-btn {
             background: #1d1d1f;
             color: white;
         }
 
-        .save-date-btn:hover {
+        .save-date-btn:hover, .save-tags-btn:hover {
             background: #333;
         }
 
-        .cancel-date-btn {
+        .cancel-date-btn, .cancel-tags-btn {
             background: #f5f5f5;
             color: #1d1d1f;
         }
 
-        .cancel-date-btn:hover {
+        .cancel-date-btn:hover, .cancel-tags-btn:hover {
             background: #e9e9ef;
         }
 
-        .remove-date-btn {
+        .remove-date-btn, .clear-tags-btn {
             background: #ffe6e5;
             color: #ff3b30;
         }
 
-        .remove-date-btn:hover {
+        .remove-date-btn:hover, .clear-tags-btn:hover {
             background: #ff3b30;
             color: white;
         }
@@ -384,12 +787,11 @@
         }
 
         @media (max-width: 550px) {
-            .container {
+            .container, .calendar-page {
                 padding: 48px 20px 100px;
             }
             
-            .greeting-hi,
-            .greeting-message {
+            .greeting-hi, .greeting-message {
                 font-size: 32px;
             }
             
@@ -401,65 +803,623 @@
                 font-size: 16px;
             }
             
-            .task-due-date {
-                font-size: 11px;
-                margin-left: 0;
-                margin-top: 8px;
-            }
-            
-            .task-item {
-                flex-wrap: wrap;
+            .task-main {
+                flex-direction: column;
+                align-items: flex-start;
             }
             
             .task-actions {
-                margin-left: 40px;
+                margin-left: 0;
+                margin-top: 8px;
             }
+
+            .sidebar {
+                width: 260px;
+                transform: translateX(-240px);
+            }
+
+            .day-task-item {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+                /* ===== DAY TASKS MODAL ===== */
+        .day-tasks-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .day-tasks-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .day-tasks-card {
+            background: white;
+            border-radius: 24px;
+            padding: 0;
+            width: 400px;
+            max-width: 90%;
+            max-height: 80vh;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .day-tasks-modal.active .day-tasks-card {
+            transform: scale(1);
+        }
+
+        .day-tasks-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e9e9ef;
+            background: #fafafa;
+        }
+
+        .day-tasks-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin: 0;
+        }
+
+        .close-day-tasks-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #8e8e93;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .close-day-tasks-btn:hover {
+            background: #e9e9ef;
+            color: #1d1d1f;
+        }
+
+        .day-tasks-list {
+            padding: 16px 24px 24px;
+            overflow-y: auto;
+            max-height: 60vh;
+        }
+
+        .day-task-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #e9e9ef;
+            transition: all 0.2s ease;
+        }
+
+        .day-task-item:last-child {
+            border-bottom: none;
+        }
+
+        .day-task-item:hover {
+            background: #f8f8fa;
+            margin: 0 -8px;
+            padding: 12px 8px;
+            border-radius: 12px;
+        }
+
+        .day-task-checkbox {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 1.5px solid #c6c6c8;
+            background: white;
+            margin-right: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+        }
+
+        .day-task-checkbox.checked {
+            background: #1d1d1f;
+            border-color: #1d1d1f;
+        }
+
+        .day-task-checkbox.checked::after {
+            content: "✓";
+            color: white;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .day-task-text {
+            flex: 1;
+            font-size: 15px;
+            color: #1d1d1f;
+            cursor: pointer;
+        }
+
+        .day-task-text.completed {
+            color: #8e8e93;
+            text-decoration: line-through;
+        }
+
+        .day-task-text:hover {
+            text-decoration: underline;
+        }
+
+        .day-task-tags {
+            display: flex;
+            gap: 6px;
+            margin-left: 12px;
+        }
+
+        .day-task-tag {
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            background: #f0f0f0;
+            color: #1d1d1f;
+            white-space: nowrap;
+        }
+
+        .empty-day-message {
+            text-align: center;
+            padding: 48px 24px;
+            color: #c6c6c8;
+            font-size: 15px;
+        }
+
+        /* Task color tags in modal */
+        .day-task-tag.work { background: #e3f2fd; color: #1565c0; }
+        .day-task-tag.personal { background: #fce4ec; color: #c2185b; }
+        .day-task-tag.shopping { background: #fff3e0; color: #e65100; }
+        .day-task-tag.health { background: #e8f5e9; color: #2e7d32; }
+        .day-task-tag.study { background: #f3e5f5; color: #7b1fa2; }
+        .day-task-tag.urgent { background: #ffebee; color: #c62828; }
+
+
+                /* ===== FILTER BAR STYLES ===== */
+        .filter-bar {
+            background: #f8f8fa;
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: none;
+            border: 1px solid #e9e9ef;
+        }
+
+        .filter-bar.active {
+            display: block;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .filter-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1d1d1f;
+        }
+
+        .filter-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .filter-tag-btn {
+            font-size: 13px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            background: white;
+            border: 1px solid #e9e9ef;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .filter-tag-btn:hover {
+            background: #e9e9ef;
+        }
+
+        .filter-tag-btn.active {
+            background: #1d1d1f;
+            color: white;
+            border-color: #1d1d1f;
+        }
+
+        /* Tag-specific colors when active */
+        .filter-tag-btn.work.active { background: #1565c0; border-color: #1565c0; }
+        .filter-tag-btn.personal.active { background: #c2185b; border-color: #c2185b; }
+        .filter-tag-btn.shopping.active { background: #e65100; border-color: #e65100; }
+        .filter-tag-btn.health.active { background: #2e7d32; border-color: #2e7d32; }
+        .filter-tag-btn.study.active { background: #7b1fa2; border-color: #7b1fa2; }
+        .filter-tag-btn.urgent.active { background: #c62828; border-color: #c62828; }
+
+        /* No results message */
+        .no-results {
+            text-align: center;
+            padding: 48px 20px;
+            color: #c6c6c8;
+            font-style: italic;
+        }
+
+
+                /* ===== SETTINGS ICON & MODAL ===== */
+        .settings-icon {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 1px solid #e9e9ef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            z-index: 200;
+            color: #1d1d1f;
+        }
+
+        .settings-icon:hover {
+            background: #f8f8fa;
+            transform: rotate(30deg);
+        }
+
+        .settings-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .settings-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .settings-card {
+            background: white;
+            border-radius: 24px;
+            width: 420px;
+            max-width: 90%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            transform: scale(0.95);
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+
+        .settings-modal.active .settings-card {
+            transform: scale(1);
+        }
+
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #e9e9ef;
+            background: #fafafa;
+        }
+
+        .settings-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .close-settings-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #8e8e93;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .close-settings-btn:hover {
+            background: #e9e9ef;
+            color: #1d1d1f;
+        }
+
+        .settings-content {
+            padding: 24px;
+        }
+
+        .settings-description {
+            font-size: 14px;
+            color: #8e8e93;
+            margin-bottom: 24px;
+        }
+
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 0;
+            border-bottom: 1px solid #e9e9ef;
+        }
+
+        .settings-option:last-child {
+            border-bottom: none;
+        }
+
+        .option-info {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .option-icon {
+            font-size: 20px;
+        }
+
+        .option-name {
+            font-size: 16px;
+            font-weight: 500;
+            color: #1d1d1f;
+        }
+
+        .option-desc {
+            font-size: 12px;
+            color: #8e8e93;
+        }
+
+        /* Toggle Switch */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 50px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #c6c6c8;
+            transition: 0.3s;
+            border-radius: 34px;
+        }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.3s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background-color: #1d1d1f;
+        }
+
+        .toggle-switch input:checked + .toggle-slider:before {
+            transform: translateX(22px);
+        }
+
+        .settings-footer {
+            padding: 16px 24px;
+            background: #f8f8fa;
+            border-top: 1px solid #e9e9ef;
+        }
+
+        .settings-note {
+            font-size: 12px;
+            color: #8e8e93;
+            text-align: center;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="greeting-section">
-            <div class="greeting-line greeting-hi">Hi!</div>
-            <div class="greeting-line greeting-message">Start your simple productivity journey today</div>
+    <div class="sidebar-trigger"></div>
+
+    <div class="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-logo">SimpleDone</div>
+            <ul class="sidebar-nav">
+                <li><button id="todoNavBtn" class="active">📋 To-Do List</button></li>
+                <li><button id="calendarNavBtn">📅 Calendar</button></li>
+            </ul>
         </div>
-
-        <ul class="task-list" id="taskList">
-            {% if tasks %}
-                {% for task in tasks %}
-                <li class="task-item" data-id="{{ task[0] }}" data-due-date="{{ task[3] if task|length > 3 else '' }}">
-                    <div class="task-main">
-                        <div class="checkbox {% if task[2] == 1 %}checked{% endif %}"></div>
-                        <span class="task-text {% if task[2] == 1 %}completed{% endif %}" contenteditable="true">
-                            {{ task[1] }}
-                        </span>
-                        {% if task|length > 3 and task[3] %}
-                        <span class="task-due-date" data-due="{{ task[3] }}">
-                            📅 {{ task[3] }}
-                        </span>
-                        {% endif %}
-                    </div>
-                    <div class="task-actions">
-                        <button class="due-date-btn">📅 Due</button>
-                        <button class="delete-task">✕</button>
-                    </div>
-                </li>
-                {% endfor %}
-            {% endif %}
-        </ul>
-
-        <div class="new-task">
-            <input type="text" 
-                   class="new-task-input" 
-                   id="newTaskInput" 
-                   placeholder="add task"
-                   autofocus>
-        </div>
-
-        <div class="stats" id="stats"></div>
     </div>
 
-    <!-- Date Picker Modal -->
+                    <!-- Settings Icon -->
+                                <!-- Settings Icon -->
+                <div class="settings-icon" id="settingsIcon">
+                    ⚙️
+                </div>
+
+                <!-- Settings Modal -->
+                <div id="settingsModal" class="settings-modal">
+                    <div class="settings-card">
+                        <div class="settings-header">
+                            <h3>⚙️ Modules</h3>
+                            <button class="close-settings-btn" id="closeSettingsBtn">✕</button>
+                        </div>
+                        <div class="settings-content">
+                            <p class="settings-description">Choose which features you want to use. Turn off anything you don't need.</p>
+                            <div class="settings-option">
+                                <div class="option-info">
+                                    <span class="option-icon">🏷️</span>
+                                    <span class="option-name">Tags</span>
+                                    <span class="option-desc">Categorize tasks with custom tags</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="toggleTags" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-option">
+                                <div class="option-info">
+                                    <span class="option-icon">📅</span>
+                                    <span class="option-name">Due Dates</span>
+                                    <span class="option-desc">Add deadlines and see overdue tasks</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="toggleDueDates" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                            <div class="settings-option">
+                                <div class="option-info">
+                                    <span class="option-icon">📆</span>
+                                    <span class="option-name">Calendar View</span>
+                                    <span class="option-desc">See tasks organized by due date</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="toggleCalendar" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="settings-footer">
+                            <p class="settings-note">💡 Toggle features on/off anytime. Your data is preserved.</p>
+                        </div>
+                    </div>
+                </div>
+
+    <div class="main-content">
+        <div id="todoPage" class="todo-page">
+            <div class="container">
+                <div class="greeting-section">
+                    <div class="greeting-line greeting-hi">Hi!</div>
+                    <div class="greeting-line greeting-message">Start your simple productivity journey today</div>
+                </div>
+
+                                <!-- Filter Bar -->
+                <div class="filter-bar" id="filterBar">
+                    <div class="filter-header">
+                        <span class="filter-label">🎯 Group by tag:</span>
+                    </div>
+                    <div class="filter-tags" id="filterTags">
+                        <!-- Dynamic tag buttons will appear here -->
+                    </div>
+                </div>
+
+                <ul class="task-list" id="taskList">
+                    {% if tasks %}
+                        {% for task in tasks %}
+                        <li class="task-item" data-id="{{ task[0] }}" data-due-date="{{ task[3] if task|length > 3 else '' }}" data-tags="{{ task[4] if task|length > 4 and task[4] else '' }}">
+                            <div class="task-main">
+                                <div class="checkbox {% if task[2] == 1 %}checked{% endif %}"></div>
+                                <span class="task-text {% if task[2] == 1 %}completed{% endif %}" contenteditable="true">
+                                    {{ task[1] }}
+                                </span>
+                                {% if task|length > 4 and task[4] %}
+                                <div class="task-tags">
+                                    {% for tag in task[4].split(',') %}
+                                    <span class="tag {{ tag.lower() }}">{{ tag }}</span>
+                                    {% endfor %}
+                                </div>
+                                {% endif %}
+                                {% if task|length > 3 and task[3] %}
+                                <span class="task-due-date" data-due="{{ task[3] }}">
+                                    📅 {{ task[3] }}
+                                </span>
+                                {% endif %}
+                            </div>
+                            <div class="task-actions">
+                                <button class="tag-btn">🏷️ Tag</button>
+                                <button class="due-date-btn">📅 Due</button>
+                                <button class="delete-task">✕</button>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+
+                <div class="new-task">
+                    <input type="text" class="new-task-input" id="newTaskInput" placeholder="add task" autofocus>
+                </div>
+
+                <div class="stats" id="stats"></div>
+            </div>
+        </div>
+
+        <div id="calendarPage" class="calendar-page">
+            <div class="calendar-header">
+                <div class="calendar-title" id="calendarTitle">March 2025</div>
+                <div class="calendar-nav">
+                    <button id="prevMonthBtn">← Prev</button>
+                    <button id="todayBtn">Today</button>
+                    <button id="nextMonthBtn">Next →</button>
+                </div>
+            </div>
+            <div class="calendar-grid" id="calendarGrid"></div>
+
+            <!-- Day Detail View -->
+            <div id="dayDetailView" class="day-detail-view">
+                <div class="day-detail-header">
+                    <div class="day-detail-title" id="dayDetailTitle">Tasks for</div>
+                    <button class="close-detail-btn" id="closeDetailBtn">✕</button>
+                </div>
+                <div id="dayTaskList" class="day-task-list"></div>
+            </div>
+        </div>
+    </div>
+
     <div id="datePickerModal" class="date-picker-modal">
         <div class="date-picker-card">
             <h3>Add due date</h3>
@@ -469,6 +1429,39 @@
                 <button class="save-date-btn">Save</button>
                 <button class="cancel-date-btn">Cancel</button>
                 <button class="remove-date-btn" id="removeDateBtn" style="display: none;">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tagModal" class="tag-modal">
+        <div class="tag-card">
+            <h3>Add tags to task</h3>
+            <input type="text" id="tagInput" class="tag-input" placeholder="e.g., work, personal, shopping">
+            <div class="suggested-tags">
+                <span class="suggested-tag" data-tag="work">work</span>
+                <span class="suggested-tag" data-tag="personal">personal</span>
+                <span class="suggested-tag" data-tag="shopping">shopping</span>
+                <span class="suggested-tag" data-tag="health">health</span>
+                <span class="suggested-tag" data-tag="study">study</span>
+                <span class="suggested-tag" data-tag="urgent">urgent</span>
+            </div>
+            <div class="tag-buttons">
+                <button class="save-tags-btn">Save</button>
+                <button class="clear-tags-btn">Clear All</button>
+                <button class="cancel-tags-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+        <!-- Calendar Day Tasks Modal -->
+    <div id="dayTasksModal" class="day-tasks-modal">
+        <div class="day-tasks-card">
+            <div class="day-tasks-header">
+                <h3 id="dayTasksDate">Tasks due on</h3>
+                <button class="close-day-tasks-btn" id="closeDayTasksBtn">✕</button>
+            </div>
+            <div id="dayTasksList" class="day-tasks-list">
+                <!-- Tasks will be dynamically inserted here -->
             </div>
         </div>
     </div>
