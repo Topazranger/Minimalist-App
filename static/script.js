@@ -173,8 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
         if (task.due_date) li.dataset.dueDate = task.due_date;
         if (task.tags && state.modules.tags) li.dataset.tags = task.tags;
         
-        const tagsHtml = task.tags && state.modules.tags ? `<div class="task-tags">${task.tags.split(',').map(t => `<span class="tag ${t.trim().toLowerCase()}">${t.trim()}</span>`).join('')}</div>` : '';
-        const dueHtml = task.due_date && state.modules.dueDates ? `<span class="task-due-date" data-due="${task.due_date}">📅 ${task.due_date}</span>` : '';
+        const tagsHtml = task.tags && state.modules.tags ? `<div class="task-tags">${task.tags.split(',').map
+            (t => `<span class="tag ${t.trim().toLowerCase()}">${t.trim()}</span>`).join('')}</div>` : '';
+        const dueHtml = task.due_date && state.modules.dueDates ? `<span class="task-due-date" data-due="
+            ${task.due_date}">📅 ${task.due_date}</span>` : '';
         
         li.innerHTML = `
             <div class="task-main">
@@ -192,7 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
         
         elements.taskList.appendChild(li);
         if (state.activeFilter && state.modules.tags) {
-            const match = task.tags && task.tags.split(',').map(t => t.trim().toLowerCase()).includes(state.activeFilter);
+            const match = task.tags && task.tags.split(',').map(t => t.trim().toLowerCase()).
+                includes(state.activeFilter);
             li.style.display = match ? '' : 'none';
         }
         updateStats();
@@ -208,7 +211,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const daysInMonth = new Date(year, month + 1, 0).getDate();
         const daysInPrev = new Date(year, month, 0).getDate();
         
-        elements.calendarTitle.textContent = new Date(year, month).toLocaleString('default', { month: 'long', year: 'numeric' });
+        elements.calendarTitle.textContent = new Date(year, month)
+        .toLocaleString('default', { month: 'long', year: 'numeric' });
         elements.calendarGrid.innerHTML = '';
         ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].forEach(day => {
             const header = document.createElement('div');
@@ -358,6 +362,8 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     // ==================== Event Handlers ====================
+
+
     elements.taskList.addEventListener('click', async (e) => {
         const taskItem = e.target.closest('.task-item');
         if (!taskItem) return;
@@ -404,7 +410,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (e.key !== 'Enter') return;
         const text = e.target.value.trim();
         if (!text) return;
-        const data = await api('/add', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ task: text }) });
+        const data = await api('/add', { method: 'POST', headers: { 'Content-Type': 
+            'application/json' }, body: JSON.stringify({ task: text }) });
         if (data.success) addTaskToDOM(data.task);
         e.target.value = '';
     });

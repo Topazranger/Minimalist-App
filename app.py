@@ -7,7 +7,6 @@ app = Flask(__name__)
 def init_db():
     conn = sqlite3.connect('tasks.db')
     c = conn.cursor()
-    # Create table with tags column
     c.execute('''
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -19,7 +18,7 @@ def init_db():
         )
     ''')
     
-    # Check if due_date column exists (for existing databases)
+
     c.execute("PRAGMA table_info(tasks)")
     columns = [col[1] for col in c.fetchall()]
     if 'due_date' not in columns:
